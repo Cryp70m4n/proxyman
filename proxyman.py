@@ -123,6 +123,8 @@ def refresh_proxies(refreshes):
     while refreshes_counter < refreshes:
         cursor.execute("SELECT * FROM sources");
         rows = cursor.fetchall()
+        if rows == []:
+            return "There are no sources in database.\nInsert sources into database in order to refresh proxies."
 
         for link in rows:
             try:
