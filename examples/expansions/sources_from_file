@@ -1,0 +1,16 @@
+I'm still thinking about this feature, thea idea is to be able to make a request to API endpoint add_sources with another parameter of type boolean which would read file line by line and add sources into database
+
+Code would look something like this:
+----------------------------------------------------------------
+import sqlite3
+
+conn = sqlite3.connect("proxys.db", check_same_thread=False)
+cursor = conn.cursor()
+
+sql = "INSERT OR IGNORE INTO sources(source) VALUES(?)"
+
+with open("sources.txt", "r") as sources:
+    for source in sources.readlines():
+        cursor.execute(sql, [source.replace("\n", "")])
+        conn.commit()
+----------------------------------------------------------------
