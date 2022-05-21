@@ -172,7 +172,8 @@ def refresh_proxies(refreshes):
                 pass
 
         refreshes_counter+=1
-
+        
+    return "Success!"
 
 def get_proxies(proxy_type, proxy_amount):
     if type(proxy_amount) != int: return "proxy_amount argument must be an int value"
