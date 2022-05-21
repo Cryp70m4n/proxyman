@@ -45,7 +45,6 @@ signal.signal(signal.SIGINT, signal_handler)
 def show_sources():
     cursor.execute("SELECT * FROM sources")
     rows = cursor.fetchall()
-    conn.close()
     sources = {}
     index = 0
     while index < len(rows):
@@ -58,7 +57,6 @@ def add_source(source):
     sql = "INSERT OR IGNORE INTO sources(source) VALUES(?)"
     cursor.execute(sql, [source])
     conn.commit()
-    conn.close()
     return f"Successfully added {source} into sources table"
 
 
@@ -66,7 +64,6 @@ def remove_source(source):
     sql = "DELETE FROM sources WHERE source = ?"
     cursor.execute(sql, [source])
     conn.commit()
-    conn.close()
     return f"Successfully deleted {source} from sources table"
 
 
@@ -82,7 +79,6 @@ def proxy_check(proxy_to_check):
         sql = "INSERT OR IGNORE INTO http(proxy) VALUES(?)"
         cursor.execute(sql, [proxy_to_check])
         conn.commit()
-        conn.close()
         #print("Proxy works:", proxy_to_check, " | ", "Proxy type:http", " | ", "Response time:", check.elapsed.total_seconds())
     except:
         pass
@@ -98,7 +94,6 @@ def proxy_check(proxy_to_check):
         sql = "INSERT OR IGNORE INTO socks4(proxy) VALUES(?)"
         cursor.execute(sql, [proxy_to_check])
         conn.commit()
-        conn.close()
         #print("Proxy works:", proxy_to_check, " | ", "Proxy type:socks4", " | ", "Response time:", check.elapsed.total_seconds())
     except:
         pass
@@ -114,7 +109,6 @@ def proxy_check(proxy_to_check):
         sql = "INSERT OR IGNORE INTO socks5(proxy) VALUES(?)"
         cursor.execute(sql, [proxy_to_check])
         conn.commit()
-        conn.close()
         #print("Proxy works:", proxy_to_check, " | ", "Proxy type:socks5", " | ", "Response time:", check.elapsed.total_seconds())
     except:
         #print("Proxy doesn't work", proxy_to_check)
@@ -129,7 +123,6 @@ def refresh_proxies(refreshes):
     while refreshes_counter < refreshes:
         cursor.execute("SELECT * FROM sources");
         rows = cursor.fetchall()
-        conn.close()
         if rows == []:
             return "There are no sources in database.\nInsert sources into database in order to refresh proxies."
 
@@ -192,7 +185,6 @@ def get_proxies(proxy_type, proxy_amount):
     sql = f"SELECT * FROM {proxy_type} LIMIT {proxy_amount}"
     cursor.execute(sql)
     rows = cursor.fetchall()
-    conn.close()
     proxies = {}
     index = 0
     while index < len(rows):
