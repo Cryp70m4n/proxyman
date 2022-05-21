@@ -1,0 +1,1 @@
+#This is another feature which I'm still considering this one would allow user to make request on get_proxies endpoint with new parameter of type boolean which would allow user to dump all proxys into a text file
