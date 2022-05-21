@@ -45,6 +45,7 @@ signal.signal(signal.SIGINT, signal_handler)
 def show_sources():
     cursor.execute("SELECT * FROM sources")
     rows = cursor.fetchall()
+    conn.close()
     sources = {}
     index = 0
     while index < len(rows):
@@ -57,6 +58,7 @@ def add_source(source):
     sql = "INSERT OR IGNORE INTO sources(source) VALUES(?)"
     cursor.execute(sql, [source])
     conn.commit()
+    conn.close()
     return f"Successfully added {source} into sources table"
 
 
