@@ -1,4 +1,4 @@
-**Proxyman is an simple API written in python and sqlite which provides you easy way to scrap and manage proxy lists.**
+**Proxyman is an simple API written in python and sqlite which provides you easy way to scrape and manage proxy lists.**
 
 
 **Consider checking [/examples/usage](https://github.com/Cryp70m4n/proxyman/tree/main/examples/usage) directory to get API usage examples**
