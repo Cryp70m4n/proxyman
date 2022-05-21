@@ -24,8 +24,6 @@ except:
 
 if "requests" not in sys.modules:
     os.system(f"{pip} install requests")
-if "sqlite" not in sys.modules:
-    os.system(f"{pip} install sqlite")
 if "flask" not in sys.modules:
     os.system(f"{pip} install flask")
 if "gevent" not in sys.modules:
