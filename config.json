@@ -1,7 +1,7 @@
 {
         "source_timeout" : 2,
         "proxy_timeout" : 5,
-		"threads": 1500,
+		"threads": 500,
         "db_path" : "proxys.db",
 		"port": 4334
 }
