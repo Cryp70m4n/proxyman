@@ -22,4 +22,4 @@ If you make an API improvement which you consider useful please consider sharing
 
 
 
-Special thanks to [vanybhops](https://github.com/vanybhops) for help with regex.
+Special thanks to [vany](https://github.com/vanybhops) for help with regex.
