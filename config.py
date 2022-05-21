@@ -8,7 +8,7 @@ class ProxymanConfig():
     def __init__(self):
         self.source_timeout = 2
         self.proxy_timeout = 5
-        self.threads = 1500
+        self.threads = 500
         self.db_path = "proxys.db"
         self.port = 4334
 
