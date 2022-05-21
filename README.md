@@ -19,3 +19,7 @@ If you have any questions or expension ideas regarding API feel free to contact 
 if you face some bugs while using API please open Issue.
 
 If you make an API improvement which you consider useful please consider sharing it with us by making Pull request.
+
+
+
+Special thanks to [vanybhops](https://github.com/vanybhops) for help with regex.
