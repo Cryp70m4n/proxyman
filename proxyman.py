@@ -111,7 +111,7 @@ def proxy_check(proxy_to_check):
         sql = "INSERT OR IGNORE INTO http(proxy) VALUES(?)"
         cursor.execute(sql, [proxy_to_check])
         conn.commit()
-        print("Proxy works:", proxy_to_check, " | ", "Proxy type:http", " | ", "Response time:", check.elapsed.total_seconds())
+        #print("Proxy works:", proxy_to_check, " | ", "Proxy type:http", " | ", "Response time:", check.elapsed.total_seconds())
     except:
         pass
 
@@ -126,7 +126,7 @@ def proxy_check(proxy_to_check):
         sql = "INSERT OR IGNORE INTO socks4(proxy) VALUES(?)"
         cursor.execute(sql, [proxy_to_check])
         conn.commit()
-        print("Proxy works:", proxy_to_check, " | ", "Proxy type:socks4", " | ", "Response time:", check.elapsed.total_seconds())
+        #print("Proxy works:", proxy_to_check, " | ", "Proxy type:socks4", " | ", "Response time:", check.elapsed.total_seconds())
     except:
         pass
 
@@ -141,9 +141,9 @@ def proxy_check(proxy_to_check):
         sql = "INSERT OR IGNORE INTO socks5(proxy) VALUES(?)"
         cursor.execute(sql, [proxy_to_check])
         conn.commit()
-        print("Proxy works:", proxy_to_check, " | ", "Proxy type:socks5", " | ", "Response time:", check.elapsed.total_seconds())
+        #print("Proxy works:", proxy_to_check, " | ", "Proxy type:socks5", " | ", "Response time:", check.elapsed.total_seconds())
     except:
-        print("Proxy doesn't work", proxy_to_check)
+        #print("Proxy doesn't work", proxy_to_check)
         pass
 
 
