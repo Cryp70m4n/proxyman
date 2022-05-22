@@ -23,3 +23,6 @@ If you make an API improvement which you consider useful please consider sharing
 
 
 Special thanks to [vany](https://github.com/vanybhops) for help with regex.
+
+# TO DO
+get_proxies should check proxies once again and clear them from database if they doesn't respond.
