@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 import requests
 import re
-import threading
+from threading import Thread
+from queue import Queue
 from urllib.parse import unquote
 import sqlite3
 from sqlite3 import Error
@@ -27,7 +28,38 @@ thread_list2 = []
 reggy=r'([0-9.]{7,20})(:[0-9]{2,4})'
 reggy2=r'[0-9.]{2,16}\n'
 
+supported_types = ["http", "socks4", "socks5"]
 
+
+global queue
+queue = Queue()
+
+
+class EnumerationWorker(Thread):
+    def __init__(self, queue):
+        Thread.__init__(self)
+        self.queue = queue
+        self.id = 0
+
+    def run(self):
+        while True:
+            proxy = self.queue.get()
+            try:
+                proxy_check(proxy)
+            finally:
+                self.queue.task_done()
+
+
+def thread_enumeration(proxies):
+    for thread in range(threads):
+        worker = EnumerationWorker(queue)
+        worker.daemon = True
+        worker.id = thread
+        worker.start()
+    for proxy in proxies:
+        queue.put(proxy)
+
+    queue.join()
 
 try:
     conn = sqlite3.connect(db, check_same_thread=False)
@@ -79,7 +111,7 @@ def proxy_check(proxy_to_check):
         sql = "INSERT OR IGNORE INTO http(proxy) VALUES(?)"
         cursor.execute(sql, [proxy_to_check])
         conn.commit()
-        #print("Proxy works:", proxy_to_check, " | ", "Proxy type:http", " | ", "Response time:", check.elapsed.total_seconds())
+        print("Proxy works:", proxy_to_check, " | ", "Proxy type:http", " | ", "Response time:", check.elapsed.total_seconds())
     except:
         pass
 
@@ -94,7 +126,7 @@ def proxy_check(proxy_to_check):
         sql = "INSERT OR IGNORE INTO socks4(proxy) VALUES(?)"
         cursor.execute(sql, [proxy_to_check])
         conn.commit()
-        #print("Proxy works:", proxy_to_check, " | ", "Proxy type:socks4", " | ", "Response time:", check.elapsed.total_seconds())
+        print("Proxy works:", proxy_to_check, " | ", "Proxy type:socks4", " | ", "Response time:", check.elapsed.total_seconds())
     except:
         pass
 
@@ -109,9 +141,9 @@ def proxy_check(proxy_to_check):
         sql = "INSERT OR IGNORE INTO socks5(proxy) VALUES(?)"
         cursor.execute(sql, [proxy_to_check])
         conn.commit()
-        #print("Proxy works:", proxy_to_check, " | ", "Proxy type:socks5", " | ", "Response time:", check.elapsed.total_seconds())
+        print("Proxy works:", proxy_to_check, " | ", "Proxy type:socks5", " | ", "Response time:", check.elapsed.total_seconds())
     except:
-        #print("Proxy doesn't work", proxy_to_check)
+        print("Proxy doesn't work", proxy_to_check)
         pass
 
 
@@ -137,17 +169,7 @@ def refresh_proxies(refreshes):
                     for found in proxy:
                         found_proxy = found[0]+found[1].replace("\n", "")
                         proxy_list_1.append(found_proxy)
-                    counter = 0
-                    thread_list = []
-                    for proxy in proxy_list_1:
-                        for thread in range(threads):
-                            thread = threading.Thread(target = proxy_check, args=(proxy_list_1[counter], ))
-                            thread.start()
-                            counter+=1
-                        for thr in thread_list:
-                            thr.join()
-                        thread_list = []
-                    proxy_list_1 = []
+                    thread_enumeration(proxy_list_1)
 
                 elif(len(re.findall(reggy,matches))<2) and (len(re.findall(reggy2,matches))>2):
                     proxy = re.findall(reggy2, matches)
@@ -155,19 +177,9 @@ def refresh_proxies(refreshes):
                         proxy_list_2 = []
                         if len(proxy[found]) > 7:
                             found_proxy = proxy[found].replace("\n", "") + ":" + proxy[found+1].replace("\n", "")
-                            proxy_list2.append(found_proxy)
+                            proxy_list_2.append(found_proxy)
                                 
-                        counter = 0
-                        thread_list = []
-                        for proxy in proxy_list_2:
-                            for thread in range(threads):
-                                thread = threading.Thread(target = proxy_check, args=(proxy_list_2[counter], ))
-                                thread.start()
-                                counter+=1
-                            for thr in thread_list:
-                                thr.join()
-                            thread_list = []
-                        proxy_list2 = []
+                        thread_enumeration(proxy_list_2)
             except:
                 pass
 
@@ -179,7 +191,6 @@ def get_proxies(proxy_type, proxy_amount):
     if type(proxy_amount) != int: return "proxy_amount argument must be an int value"
     if proxy_amount < 1: return "proxy_amount argument must be higher than 0"
 
-    supported_types = ["http", "socks4", "socks5"]
     if proxy_type not in supported_types:
         return "Invalid proxy type\nSupported types:http, socks4, socks5"
 
