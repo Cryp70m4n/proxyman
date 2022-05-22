@@ -74,6 +74,59 @@ def signal_handler(sig, frame):
 signal.signal(signal.SIGINT, signal_handler)
 
 
+
+def http_check(proxy_to_check):
+    try:
+        proxy = 'http://' + proxy_to_check
+        proxies = {
+            'http':     proxy,
+            'https':    proxy
+        }
+
+        check = requests.get("https://api.ipify.org", proxies=proxies, timeout = proxy_timeout)
+        sql = "INSERT OR IGNORE INTO http(proxy) VALUES(?)"
+        cursor.execute(sql, [proxy_to_check])
+        conn.commit()
+        #print("Proxy works:", proxy_to_check, " | ", "Proxy type:http", " | ", "Response time:", check.elapsed.total_seconds())
+        return "http"
+    except:
+        return "Unsuccess!"
+
+def socks4_check(proxy_to_check):
+    try:
+        proxy = 'socks4://' + proxy_to_check
+        proxies = {
+            'http':     proxy,
+            'https':    proxy
+        }
+
+        check = requests.get("https://api.ipify.org", proxies=proxies, timeout = proxy_timeout)
+        sql = "INSERT OR IGNORE INTO socks4(proxy) VALUES(?)"
+        cursor.execute(sql, [proxy_to_check])
+        conn.commit()
+        #print("Proxy works:", proxy_to_check, " | ", "Proxy type:socks4", " | ", "Response time:", check.elapsed.total_seconds())
+        return "socks4"
+    except:
+        return "Unsuccess!"
+
+def socks5_check(proxy_to_check):
+    try:
+        proxy = 'socks5://' + proxy_to_check
+        proxies = {
+            'http':     proxy,
+            'https':    proxy
+        }
+
+        check = requests.get("https://api.ipify.org", proxies=proxies, timeout = proxy_timeout)
+        sql = "INSERT OR IGNORE INTO socks5(proxy) VALUES(?)"
+        cursor.execute(sql, [proxy_to_check])
+        conn.commit()
+        #print("Proxy works:", proxy_to_check, " | ", "Proxy type:socks5", " | ", "Response time:", check.elapsed.total_seconds())
+        return "socks5"
+    except:
+        return "Unsuccess!"
+
+
 def show_sources():
     cursor.execute("SELECT * FROM sources")
     rows = cursor.fetchall()
@@ -100,51 +153,17 @@ def remove_source(source):
 
 
 def proxy_check(proxy_to_check):
-    try:
-        proxy = 'http://' + proxy_to_check
-        proxies = {
-            'http':     proxy,
-            'https':    proxy
-        }
+    if http_check(proxy_to_check) != "Unsuccess!":
+        return "http"
+    if socks4_check(proxy_to_check) != "Unsuccess!":
+        return "socks4"
+    if socks5_check(proxy_check) != "Unsuccess!":
+        return "socks5"
+    else:
+        return f"Proxy doesn't work {proxy_check}"
 
-        check = requests.get("https://api.ipify.org", proxies=proxies, timeout = proxy_timeout)
-        sql = "INSERT OR IGNORE INTO http(proxy) VALUES(?)"
-        cursor.execute(sql, [proxy_to_check])
-        conn.commit()
-        #print("Proxy works:", proxy_to_check, " | ", "Proxy type:http", " | ", "Response time:", check.elapsed.total_seconds())
-    except:
-        pass
 
-    try:
-        proxy = 'socks4://' + proxy_to_check
-        proxies = {
-            'http':     proxy,
-            'https':    proxy
-        }
 
-        check = requests.get("https://api.ipify.org", proxies=proxies, timeout = proxy_timeout)
-        sql = "INSERT OR IGNORE INTO socks4(proxy) VALUES(?)"
-        cursor.execute(sql, [proxy_to_check])
-        conn.commit()
-        #print("Proxy works:", proxy_to_check, " | ", "Proxy type:socks4", " | ", "Response time:", check.elapsed.total_seconds())
-    except:
-        pass
-
-    try:
-        proxy = 'socks5://' + proxy_to_check
-        proxies = {
-            'http':     proxy,
-            'https':    proxy
-        }
-
-        check = requests.get("https://api.ipify.org", proxies=proxies, timeout = proxy_timeout)
-        sql = "INSERT OR IGNORE INTO socks5(proxy) VALUES(?)"
-        cursor.execute(sql, [proxy_to_check])
-        conn.commit()
-        #print("Proxy works:", proxy_to_check, " | ", "Proxy type:socks5", " | ", "Response time:", check.elapsed.total_seconds())
-    except:
-        #print("Proxy doesn't work", proxy_to_check)
-        pass
 
 
 def refresh_proxies(refreshes):
