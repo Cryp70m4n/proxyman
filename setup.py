@@ -14,12 +14,6 @@ if res2 == 0:
 
 else:
     print("Please install pip and run setup again in order to run Proxyman")
-
-try:
-    os.system("pip3 --version")
-    pip = "pip3"
-except:
-    print("Please install pip and run setup again in order to use Proxyman")
     exit()
 
 if "requests" not in sys.modules:
